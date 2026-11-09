@@ -1,0 +1,9 @@
+**
+!requirements.txt
+!LICENSE
+!mybo
+!mybo/**
+!web
+!web/**
+**/__pycache__
+**/*.pyc

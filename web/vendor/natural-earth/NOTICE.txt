@@ -1,0 +1,14 @@
+Made with Natural Earth.
+Natural Earth 1:110m Admin 0 Countries, version 5.1.2. Geometry and country label fields are included.
+Source: https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_110m_admin_0_countries.geojson
+Public domain terms: https://www.naturalearthdata.com/about/terms-of-use/
+
+Regional boundaries: Natural Earth 1:10m Admin 1 States Provinces Lines, version 5.1.2.
+Source: https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_10m_admin_1_states_provinces_lines.geojson
+Geometry simplified to 0.015 degrees and rounded to four decimal places.
+
+Cities: Natural Earth 1:10m Populated Places, version 5.1.2.
+Source: https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_10m_populated_places.geojson
+Includes cities with POP_MAX >= 100000 and national capitals, with English and Russian names.
+MIN_LABEL is a display zoom derived from population and capital status, not an original source field.
+Rebuild with: python deploy/build_geography.py regions-source.geojson cities-source.geojson

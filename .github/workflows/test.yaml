@@ -1,0 +1,56 @@
+name: Test MyBlitzortung
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: test-password
+          MARIADB_ROOT_HOST: "%"
+          MARIADB_DATABASE: mybo_target_test
+        ports:
+          - 3306/tcp
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Test against MariaDB and SQLite
+        env:
+          MYBO_TEST_DB_URL: mysql+pymysql://root:test-password@127.0.0.1:${{ job.services.db.ports[3306] }}/mybo_target_test
+          MYBO_TEST_LEGACY_URL: mysql+pymysql://root:test-password@127.0.0.1:${{ job.services.db.ports[3306] }}/mybo_source_test
+        run: |
+          python -c 'from sqlalchemy import create_engine; import os; c = create_engine(os.environ["MYBO_TEST_DB_URL"]).connect(); c.exec_driver_sql("CREATE DATABASE mybo_source_test"); c.close()'
+          python -m pytest -q
+      - name: Validate Compose
+        env:
+          MARIADB_ROOT_PASSWORD: validation-root
+          MARIADB_PASSWORD: validation-app
+        run: docker compose --env-file .env.example config --quiet
+      - name: Start Compose services
+        env:
+          MARIADB_ROOT_PASSWORD: validation-root
+          MARIADB_PASSWORD: validation-app
+        run: |
+          docker compose up -d --build --wait --wait-timeout 180 api worker
+          curl -fsS http://127.0.0.1:8080/health/ready
+          test "$(curl -sS -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/strikes/live)" = 401
+      - name: Show Compose logs on failure
+        if: failure()
+        env:
+          MARIADB_ROOT_PASSWORD: validation-root
+          MARIADB_PASSWORD: validation-app
+        run: docker compose logs --no-color

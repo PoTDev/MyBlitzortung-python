@@ -1,0 +1,49 @@
+<?php
+
+/*******************************************************************/
+/* Main Config file for MyBlitzortung                              */
+/*                                                                 */
+/* See file "includes/default_settings.inc.php" for more           */
+/* information about the settings.                                 */
+/*                                                                 */
+/* Never put any characters, spaces etc. before "<?php" or         */
+/* otherwise all images won't work!                                */
+/*******************************************************************/
+
+
+//Database
+define("BO_DB_USER", "blitzortung");
+define("BO_DB_PASS", "atYu9jMBaSGsnys4");
+define("BO_DB_NAME", "blitzortung");
+define("BO_DB_HOST", "localhost");
+define("BO_DB_PREF", "bo_");
+
+
+//The update secret
+define('BO_UPDATE_SECRET', '');
+
+
+//Station Settings
+define("BO_LAT", 0.000);
+define("BO_LON", 0.000);
+define("BO_STATION_NAME", "");
+
+
+//Blitzortung.org Stuff
+define("BO_USER", "");
+define("BO_PASS", "");
+define("BO_REGION", 1);
+define("BO_STATION_ID", "");
+
+
+//Your timezone
+define("BO_TIMEZONE", "UTC");
+
+
+//To see error messages, enable this (set to true)
+define("BO_DEBUG", false);
+
+
+
+
+?>

@@ -1,0 +1,100 @@
+name: myblitzortung
+
+x-database-env: &database-env
+  MARIADB_DATABASE: ${MARIADB_DATABASE:-mybo}
+  MARIADB_USER: ${MARIADB_USER:-mybo}
+  MARIADB_PASSWORD: ${MARIADB_PASSWORD:?Set MARIADB_PASSWORD in .env}
+
+x-app: &app
+  build: .
+  image: myblitzortung-python:local
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  init: true
+
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      <<: *database-env
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Set MARIADB_ROOT_PASSWORD in .env}
+      MARIADB_ROOT_HOST: localhost
+      TZ: UTC
+    volumes:
+      - database:/var/lib/mysql
+    healthcheck:
+      test: [CMD, healthcheck.sh, --connect, --innodb_initialized]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  init:
+    <<: *app
+    command: [python, -m, mybo.cli, init-db]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment: *database-env
+
+  api:
+    <<: *app
+    restart: unless-stopped
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    environment:
+      <<: *database-env
+      MYBO_ORIGIN: ${MYBO_ORIGIN:-http://127.0.0.1:8080}
+      MYBO_BASE_PATH: ${MYBO_BASE_PATH:-}
+      MYBO_SECURE_COOKIE: ${MYBO_SECURE_COOKIE:-false}
+      MYBO_SUPERADMIN_LOGIN: ${MYBO_SUPERADMIN_LOGIN:-}
+      MYBO_SUPERADMIN_PASSWORD: ${MYBO_SUPERADMIN_PASSWORD:-}
+      MYBO_VIEW_RADIUS_KM: ${MYBO_VIEW_RADIUS_KM:-0}
+      MYBO_SITE_LAT: ${MYBO_SITE_LAT:-0}
+      MYBO_SITE_LON: ${MYBO_SITE_LON:-0}
+      MYBO_TILE_URL: ${MYBO_TILE_URL:-}
+      MYBO_TILE_LABEL_URL: ${MYBO_TILE_LABEL_URL:-}
+      MYBO_TILE_ATTRIBUTION: "${MYBO_TILE_ATTRIBUTION:-}"
+      BO_OWN_STATION: ${BO_OWN_STATION:-0}
+    ports:
+      - target: 8000
+        published: "${MYBO_BIND_PORT:-8080}"
+        host_ip: "${MYBO_BIND_HOST:-0.0.0.0}"
+        protocol: tcp
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3).close()"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  worker:
+    <<: *app
+    restart: unless-stopped
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    command: [python, -m, mybo.worker]
+    environment:
+      <<: *database-env
+      BO_IMPORT_ENABLED: ${BO_IMPORT_ENABLED:-false}
+      BO_FEED_BASE: ${BO_FEED_BASE:-https://data.blitzortung.org/Data_1/Protected}
+      BO_FEED_USER: ${BO_FEED_USER:-}
+      BO_FEED_PASSWORD: ${BO_FEED_PASSWORD:-}
+      BO_OWN_STATION: ${BO_OWN_STATION:-0}
+      BO_POLL_SECONDS: ${BO_POLL_SECONDS:-300}
+      BO_STATION_SECONDS: ${BO_STATION_SECONDS:-900}
+      BO_LOOKBACK_HOURS: ${BO_LOOKBACK_HOURS:-2}
+    healthcheck:
+      test: [CMD, python, -m, mybo.worker, --health]
+      interval: 60s
+      timeout: 5s
+      retries: 4
+      start_period: 60s
+
+volumes:
+  database:

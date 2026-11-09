@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>MyBlitzortung</title>
+  <link rel="icon" href="assets/bolt.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script defer src="assets/vendor/leaflet/leaflet.js"></script>
+  <script type="module" src="assets/app.js"></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="brand"><img src="assets/bolt.svg" width="35" height="35" alt=""><span id="brand">MyBlitzortung</span></div>
+    <nav id="nav" aria-label="Navigation" hidden>
+      <button type="button" data-page="live" data-t="map"></button>
+      <button type="button" data-page="archive" data-t="archive"></button>
+      <button type="button" data-page="stations" data-t="stations"></button>
+      <button type="button" data-page="settings" data-t="settings"></button>
+    </nav>
+    <div class="bar-actions">
+      <select id="language" aria-label="Language"><option value="ru">RU</option><option value="en">EN</option></select>
+      <button id="theme-toggle" type="button"></button>
+      <a id="register" class="header-action" href="https://www.blitzortung.org/en/login.php" target="_blank" rel="noopener noreferrer" data-t="blitzortungRegistration" hidden></a>
+      <button id="login-open" type="button" data-t="enter" hidden></button>
+      <button id="logout" type="button" data-t="logout" hidden></button>
+    </div>
+  </header>
+
+  <main>
+    <section id="login" class="login-layout" hidden>
+      <div class="login-hero">
+        <p class="eyebrow" data-t="network"></p>
+        <h1 data-t="hero"></h1>
+        <p class="muted" data-t="intro"></p>
+      </div>
+      <form id="login-form" class="card">
+        <h2 data-t="login"></h2>
+        <p class="muted" data-t="loginHint"></p>
+        <label><span data-t="username"></span><input name="login" autocomplete="username" maxlength="50" required></label>
+        <label><span data-t="password"></span><input name="password" type="password" autocomplete="current-password" maxlength="256" required></label>
+        <button class="accent" data-t="enter"></button>
+        <button id="back-to-map" type="button" data-t="backToMap"></button>
+        <p id="login-status" class="notice" role="status"></p>
+      </form>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="heading">
+        <div><p class="eyebrow" data-t="network"></p><h1 id="page-title"></h1><p id="page-caption" class="muted"></p></div>
+        <div class="chip"><i></i><time id="clock"></time></div>
+      </div>
+      <p id="notice" class="notice" role="status" hidden></p>
+
+      <section id="map-section" hidden>
+        <div id="live-tools" class="toolbar" hidden>
+          <label><span data-t="window"></span>
+            <select id="minutes">
+              <option value="15" data-t="min15"></option><option value="30" data-t="min30"></option>
+              <option value="60" data-t="hour1"></option><option value="180" data-t="hour3"></option><option value="360" data-t="hour6"></option>
+            </select>
+          </label>
+          <label id="station-layer-control" class="check"><input id="station-layer" type="checkbox"><span data-t="stations"></span></label>
+          <button id="recenter" type="button" data-t="resetMap"></button>
+          <button id="refresh" type="button" data-t="refresh"></button>
+        </div>
+        <form id="archive-tools" class="toolbar" hidden>
+          <label><span data-t="from"></span><input id="archive-start" type="datetime-local" required></label>
+          <label><span data-t="to"></span><input id="archive-end" type="datetime-local" required></label>
+          <label><span data-t="station"></span><input id="archive-station" type="search" list="station-options" data-t-placeholder="stationSearch" autocomplete="off"></label>
+          <label class="check"><input id="use-viewport" type="checkbox"><span data-t="viewport"></span></label>
+          <button class="accent" data-t="search"></button>
+          <button id="density" type="button" data-t="density" aria-pressed="false"></button>
+        </form>
+        <div class="map-wrap">
+          <div id="map" role="region" aria-label="Map"></div>
+          <div id="legend" class="legend"><span class="legend-old" data-t="older"></span><i></i><span data-t="newer"></span></div>
+        </div>
+        <div class="map-caption"><p id="map-count" role="status"></p><p id="map-updated"></p></div>
+        <div id="archive-results" class="card" hidden>
+          <div class="row spread"><h2 data-t="events"></h2><button type="button" id="replay" data-t="replay"></button></div>
+          <div class="table-wrap">
+            <table><thead><tr><th data-t="time"></th><th data-t="coordinates"></th><th data-t="receivers"></th><th data-t="actions"></th></tr></thead>
+              <tbody id="archive-rows"></tbody>
+            </table>
+          </div>
+          <button id="next-archive" type="button" data-t="more" hidden></button>
+        </div>
+      </section>
+
+      <section id="station-section" hidden>
+        <form id="stats-form" class="toolbar">
+          <label><span data-t="station"></span><input id="stats-station" type="search" list="station-options" data-t-placeholder="stationSearch" autocomplete="off"></label>
+          <label><span data-t="period"></span><select id="stats-days"><option value="1" data-t="day1"></option><option value="3" data-t="day3"></option><option value="7" data-t="day7"></option><option value="31" data-t="day31"></option></select></label>
+          <button class="accent" data-t="ok"></button>
+        </form>
+        <section id="station-insights" hidden>
+          <div class="metric-grid">
+            <article class="metric"><span data-t="detectedPeriod"></span><strong id="metric-detected">—</strong></article>
+            <article class="metric"><span data-t="signalRateNow"></span><strong id="metric-signals">—</strong></article>
+            <article class="metric"><span data-t="strikeRateNow"></span><strong id="metric-strikes">—</strong></article>
+            <article class="metric"><span data-t="efficiencyApprox"></span><strong id="metric-efficiency">—</strong></article>
+          </div>
+          <div class="chart-grid">
+            <article class="card">
+              <h2 data-t="detectionByRadius"></h2>
+              <p class="muted" data-t="detectionByRadiusCaption"></p>
+              <div id="radius-stats" class="radius-stats"></div>
+            </article>
+            <article class="card">
+              <div class="row spread chart-heading"><h2 data-t="distanceDistribution"></h2><button class="chart-expand" type="button" data-chart="distance-chart" data-t="expandChart"></button></div>
+              <div class="chart" id="distance-chart"></div>
+            </article>
+            <article class="card">
+              <div class="row spread chart-heading"><h2 data-t="hourlyProfile"></h2><button class="chart-expand" type="button" data-chart="hourly-chart" data-t="expandChart"></button></div>
+              <div class="chart" id="hourly-chart"></div>
+            </article>
+          </div>
+        </section>
+        <div class="chart-grid">
+          <article class="card">
+            <div class="row spread chart-heading"><h2 data-t="strikeActivity"></h2><button class="chart-expand" type="button" data-chart="strikes-chart" data-t="expandChart"></button></div>
+            <div class="chart" id="strikes-chart"></div>
+          </article>
+          <article class="card">
+            <div class="row spread chart-heading"><h2 data-t="signalActivity"></h2><button class="chart-expand" type="button" data-chart="signals-chart" data-t="expandChart"></button></div>
+            <div class="chart" id="signals-chart"></div>
+          </article>
+          <article class="card">
+            <div class="row spread chart-heading"><h2 data-t="stationActivity"></h2><button class="chart-expand" type="button" data-chart="station-strikes-chart" data-t="expandChart"></button></div>
+            <div class="chart" id="station-strikes-chart"></div>
+          </article>
+          <article class="card">
+            <div class="row spread chart-heading"><h2 data-t="directionActivity"></h2><button class="chart-expand" type="button" data-chart="directions-chart" data-t="expandChart"></button></div>
+            <p class="muted" data-t="directionCaption"></p><div class="chart" id="directions-chart"></div>
+          </article>
+        </div>
+        <article class="card">
+          <h2 data-t="stationList"></h2>
+          <label><span data-t="findStation"></span><input id="station-search" type="search" data-t-placeholder="stationSearch" autocomplete="off"></label>
+          <div class="table-wrap"><table><thead><tr><th data-t="station"></th><th data-t="location"></th><th data-t="status"></th><th data-t="lastSignal"></th></tr></thead><tbody id="station-rows"></tbody></table></div>
+          <button type="button" id="more-stations" data-t="more" hidden></button>
+        </article>
+      </section>
+
+      <section id="settings-section" class="settings-grid" hidden>
+        <form id="display-form" class="card" hidden>
+          <h2 data-t="displaySettings"></h2>
+          <label><span data-t="title"></span><input name="title" maxlength="70" required></label>
+          <label><span data-t="defaultLanguage"></span><select name="locale"><option value="ru">Русский</option><option value="en">English</option></select></label>
+          <div class="field-grid">
+            <label><span data-t="latitude"></span><input name="lat" type="number" step="any" min="-85" max="85" required></label>
+            <label><span data-t="longitude"></span><input name="lon" type="number" step="any" min="-180" max="180" required></label>
+            <label><span data-t="zoom"></span><input name="zoom" type="number" min="1" max="18" required></label>
+            <label><span data-t="window"></span><select name="minutes"><option value="15" data-t="min15"></option><option value="30" data-t="min30"></option><option value="60" data-t="hour1"></option><option value="180" data-t="hour3"></option><option value="360" data-t="hour6"></option></select></label>
+          </div>
+          <button class="accent" data-t="save"></button>
+        </form>
+        <section id="superadmin-account" class="card" hidden>
+          <h2 data-t="superadminAccount"></h2>
+          <p class="muted" data-t="superadminPasswordHint"></p>
+        </section>
+        <form id="password-form" class="card">
+          <h2 data-t="changePassword"></h2>
+          <label><span data-t="oldPassword"></span><input name="old_password" type="password" autocomplete="current-password" required maxlength="256"></label>
+          <label><span data-t="newPassword"></span><input name="new_password" type="password" autocomplete="new-password" required minlength="12" maxlength="256"></label>
+          <button class="accent" data-t="save"></button>
+        </form>
+        <section id="users-section" class="card" hidden>
+          <h2 data-t="accounts"></h2>
+          <form id="users-form" class="toolbar">
+            <label><span data-t="username"></span><input name="login" required maxlength="50" pattern="[A-Za-z0-9_.@+\-]{1,50}" autocomplete="off"></label>
+            <label><span data-t="newPassword"></span><input name="password" type="password" required minlength="12" maxlength="256" autocomplete="new-password"></label>
+            <label class="check"><input name="archive" type="checkbox"><span data-t="archive"></span></label>
+            <label class="check"><input name="settings" type="checkbox"><span data-t="settings"></span></label>
+            <button class="accent" data-t="createAccount"></button>
+          </form>
+          <div id="users-list"></div>
+        </section>
+      </section>
+    </section>
+  </main>
+  <datalist id="station-options"></datalist>
+
+  <dialog id="signal-dialog" aria-labelledby="signal-title">
+    <div class="row spread"><h2 id="signal-title" data-t="signal"></h2><form method="dialog"><button data-t="close"></button></form></div>
+    <div id="signal-body"></div>
+  </dialog>
+  <dialog id="chart-dialog" aria-labelledby="chart-dialog-title">
+    <div class="row spread"><h2 id="chart-dialog-title"></h2><form method="dialog"><button data-t="close"></button></form></div>
+    <div id="chart-dialog-body"></div>
+  </dialog>
+  <footer><span>MyBlitzortung · GPL-3.0-or-later</span>
+    <span><span data-t="source"></span> <a href="https://www.blitzortung.org/en/contact.php">Blitzortung.org</a> · <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a></span>
+  </footer>
+</body>
+</html>

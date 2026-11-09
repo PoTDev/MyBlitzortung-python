@@ -1,0 +1,664 @@
+
+*****************************
+   MyBlitzortung Changelog
+*****************************
+
+Version 1.4-dev7 (2017-11-27)
+-----------------------------
+
+- added Slovakian translations (thanks to Peter!)
+
+
+Version 1.4-dev5 (2016-07-06)
+-----------------------------
+
+- added Ukrainian translations (thanks to La$eR!)
+
+
+Version 1.4-dev4 (2014-10-05)
+-----------------------------
+
+- added live signals
+- use new signal format (JSON)
+- use a longitude reference for static maps (i.e. when longitude close to +/-180°)
+- several minor fixes
+
+
+Version 1.4-dev3 (2014-09-26)
+-----------------------------
+
+- static maps: legend improved
+- fix: wrong 'miller' projection
+- removed some PHP error messages
+- added English/German texts of Lightningmaps.org
+
+
+Version 1.4-dev2 (2014-06-06)
+-----------------------------
+
+- added Twitter alerts
+- miller projections
+- several new maps
+- more than one station can be added by defining "BO_SHOW_STATIONS" with a comma sep. list of station-ids
+- fixes
+
+Version 1.3 (2014-05-01)
+------------------------
+
+- several minor fixes and improvments
+
+
+Version 1.2 (2014-01-17)
+------------------------
+
+- show comment and website of a station
+- import of UTF8 encoded station names
+- some other minor fixes 
+- improved translations
+
+
+Version 1.1 (2013-09-09)
+------------------------
+
+- several fixes (import, statistics)
+- new: added Swedish translations (thx to Alex)
+- new: added Polish translation (thx to Wojtek)
+- new: map of North/Middle America
+
+
+Version 1.0 (2013-08-23)
+------------------------
+
+- switched to the new data format
+- removed myblitzortung station connect (will be replaced later)
+- removed signal import (to much traffic, will be loaded when needed)
+- removed polarity stuff
+- removed graphs which depend on signals data
+- renamed strike -> stroke
+- other fixes
+- 1.0a: fix for update not working
+- 1.0b: fix longtime-statistics
+
+!!!!! IMPORTANT NOTES BEFORE UPGRADING !!!!!
+
+1) If you are updating from a previous version, then the upgrade process maps the old format to the new format. This might not work when the old format has been disabled in October 2013! The upgrade process can take VERY LONG - maybe hours on slow servers with lots of archived strokes. If the update fails due to a timeout, try it again and ignore all errors. If you have problems, consider deleting unneeded strokes or do a fresh install.
+
+2) There's a new constant BO_STATION_ID, where you have to set your station id. If you make an update, the station id is determined automatically and stored in the database. However, setting BO_STATION_ID manually is the preferred way. 
+
+3) Please remove all "BO_IMPORT_..." settings from the config.php file!
+
+4) For compatibility reasons, there are now two IDs for each station. An internal Id, which is the same on as before the update. As before, it is used with "bo_station_id=xxx" in the URL. The second one is the original Blitzortung.org Id. It can be accessed with "bo_sid=xxx" in the URL. This Id is also shown in the stations table. This Id is the same one for every station on every MyBlitzortung installation, but not the other Id!
+
+
+
+
+---------------------------------------------------------------------------------------
+These old versions will not work after old data format has been disabled in October!
+v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v v 
+
+
+Version 0.7.10
+-------------------------------
+- fixes
+
+Version 0.7.9f
+-------------------------------
+- bugfix: alerts
+- other small stuff
+
+NOTE:
+Network statistics now disabled by default, because they can cause 
+some load on your server. Insert the following line into config.php
+to enable old behaviour:
+
+define('BO_STATION_STAT_DISABLE', false);
+
+
+Version 0.7.9e
+-------------------------------
+- bugfix: too much old stations in db
+
+
+Version 0.7.9d
+-------------------------------
+- bugfix for too long queries on update
+
+
+Version 0.7.9c
+-------------------------------
+- bugfix for long station usernames
+
+
+Version 0.7.9b
+-------------------------------
+- bugfixes
+
+
+Version 0.7.9a
+-------------------------------
+- fix: cannot delete alerts
+- more database indexes for densities
+- smaller fixes
+
+
+Version 0.7.9
+-------------------------------
+- new: bigger signal graphs
+- new: example cities.txt included (utf-8 encoded!)
+- new: mini map of oceania
+- fix: url-encode alerts with http-url
+
+
+Version 0.7.8b (2012-10-19)
+-------------------------------
+- fix: names in station.txt not escaped correctly (IMPORTANT!)
+- improved fi/it translations
+
+
+Version 0.7.8a (2012-10-05)
+-------------------------------
+- installation fixes
+- added BO_EMAIL_SMTP_SECURE constant, to use phpmailer with 'tls' or 'ssl' 
+
+
+Version 0.7.8 (2012-10-02)
+-------------------------------
+- added Latvian translation (thx to Edgars)
+- added Finnish translation (thx to Timo)
+- database bulk inserts -> faster importing
+- fixed: selecting time range in main map didn't work
+- fixed: UTF8 bugs in maps/graphs
+- fixed: only one alert per user possible
+- other fixes...
+
+
+Version 0.7.7 (2012-08-04)
+-------------------------------
+- new: more maps
+   * green myblitzortung style: germany, baltic, benelux, poland, uk
+   * template for wetterpool (RIP) maps; the files have to be downloaded separately
+- new: support for big tiles with strike counts (less server load!)
+- new: full UTF8 support
+- new: send cache headers to enable caching (for experts only!)
+- improved: caching methods
+- improved: faster due to file inclusion changes
+- a lot of other improvements and fixes
+
+
+Version 0.7.6 (2012-05-31)
+-------------------------------
+- new: dutch translation (thanks to willem!)
+- new: GEOS projection method (for satellite images)
+- new: auto download of external pictures/maps (i. e. satellite)
+- new: map grouping
+- new: select stations on main map
+- new: select time period for graphs
+- new: select country for "active stations" graph
+- new: distance to a station for regions
+- new: timezone on maps and in statistics
+- new: maps for USA
+- new: send mails over smtp
+- new: show signals in strike list for every station
+- new: translate single words in short phrases
+- new: log PHP errors to file
+- new: cache for graphs
+- new: send 304 not modified header (less traffic)
+- new: advanced graph (no GUI for that)
+- new: info for each GPS point in station statistics
+- new: option to change cache dir
+- new: possibility to change to imperial system (miles, yards)
+- improved: auto update on main map (with timeout)
+- improved: nicer circles on main map for some older PHP versions
+- improved: file cache purging - now done during update
+- fix: allow longer contry names
+- fix: download strike/station data even if file was not modified
+- some other fixes
+
+
+Version 0.7.5b (2012-03-24)
+-------------------------------
+- fixed installation
+
+
+Version 0.7.5a (2012-03-16)
+-------------------------------
+- fixed update
+
+
+Version 0.7.5 (2012-03-16)
+-------------------------------
+- Default timezone now UTC!
+- moved europe maps to images/maps_europe
+- added map for Oceania and New Zealand to images/maps_oceania/
+- new: option enable database keys for faster lightning search/drawing
+    --> uses some disk space
+    --> disabled by default
+	--> you should enable if you have archived lightning-data and enough disk space
+	--> have a look on your mysql key-cache
+- new: residual time graphs (by andreas)
+- new: xy-graphs for signals (by andreas)
+- new: added a clean config.php.example
+- new: possibility to view signals of a strike from other participated stations
+- new: you can now set the google maps API parameters (i.e. for api-key or sensor-state)
+- improved: partial file download for raw data, default interval is 10 minutes now
+- improved: behaviour with lightning search
+- fix: cleaned and fixed install
+- fix: update longtime-statistics only when station is active
+- fix: user cookie behaviour, session time display
+- dev: added folder for classes
+- dev: added Database, Timestamp and SignalGraph classes
+- dev: added channels/ntime column to database-table "raw"
+
+
+Version 0.7.4a (2012-02-10)
+---------------------------
+- new: italian translation (thx to Stefano Cirilli - www.meteo.units.it)
+- new: copyright for translators
+- fix: station statistics
+- fix: changed signal import folder name to "raw_data"
+
+Version 0.7.4 (2012-02-04)
+--------------------------
+- IMPORTANT: changes for accessing new Blitzortung.org raw data (for signals) 
+   --> there may be some more changes in the next days/weeks (no more archiv.cgi needed)
+   --> older versions of MyBlitzortung won't get any raw data!
+- new: option to resize maps
+- new: more descriptions
+- new: header-text for maps
+- new: update-button above map
+- new: much faster calculation of strike densities! 
+       NOTE: * not compatible with old datasets! 
+             * old entries will be re-created if strike data is available
+- new: new colors and functions for densities
+- new: better navigation in archives (maps & animation)
+- new: time-ranges in network statistics (has to be enabled)
+- new: creation of longtime-statistics for all stations (causes high DB-load)
+- new: region select in statistics -> strikes -> year/month
+- new: larger tiles possible (new default value is 512x512 -> fewer load)
+- improved: station deletion (no data deleted, only moved to another id)
+- fix: SQL-error when inserting malformated signals
+- fix: only current year selectable in statistics -> strikes
+- fix: display lightnings everywhere on google maps, no loading of unnecessary tiles
+- minor fixes and improvements
+
+Version 0.7.3b (2011-11-04)
+---------------------------
+- fix: getting login-id could fail in 0.7.3a
+
+Version 0.7.3a (2011-11-02)
+---------------------------
+- new: drawing of hyperbolic curves - you can see how locating is done
+- new: individual copyright text for graphs / maps
+- fix: method of finding global minimum participants improved
+- fix: don't display signals for 12bit firmwares
+- fix: problem with signal download fixed (got chunked HTTP-data from archive.cgi, switched to HTTP 1.0)
+- improved importing (faster, lower memory consumption)
+- minor fixes / improvements
+
+Version 0.7.3 (2011-10-05)
+--------------------------
+- IMPORTANT: changed some database keys (NOTE: Update can take several minutes)
+- new: Hungarian translation (by Gabor)
+- new: kml overlays on dynamic map
+- new: kml output to display maps in google earth
+- new: mouseover on signal graphs to zoom in
+- new: BO_RADIUS_STAT for statistics
+- new: stations under construction
+- new: more strike locating info
+- new: some special effects ;-)
+- new: possibility to add no-cookie domain
+- fix: windroses
+- fix: another strike duplicate issue
+- graph colors adjusted (blue = lightning ...)
+- changes behaviour of session closing
+- cleanups, other fixes, small improvements
+
+Version 0.7.2b (2011-09-15)
+---------------------------
+- fix: now working with "best channel mode"
+- fix: transparency and font issues with bundled or newer PHP-GD versions
+- improved partial strike downloads again
+- some other minor fixes and improvements
+
+Version 0.7.2a (2011-09-12)
+---------------------------
+- added some more overlay templates for dynamic map
+- fix: sometimes transparency not working
+- fix: manual time range in dynamic map broken
+- fix: font problems with strike counter in dynamic map (untested!)
+- using freetype2 by default (change with BO_FONT_USE_FREETYPE2 -> false)
+
+Version 0.7.2 (2011-09-09)
+--------------------------
+- new: deletion of old stations from station database
+- new: added support of jpg and gif map files
+- new: using "If-Modified" header for strike download
+- new: use map image by time (i.e. for animations with satellite images) - thx to oh6mqm
+- new: force default language in maps (not so much load with cache)
+- new: show participated users in strike info (when logged-in)
+- new: show user and station-id in list (when logged-in)
+- fixed: better importing of strikes to avoid duplicates (needs still tuning)
+- fixed: tuned partial strike download
+- strike count in maps now closer of those on blitzortung.org-maps
+
+Version 0.7.1 (2011-09-01)
+--------------------------
+- new: partial downloads of strikedata (saves > 90% traffic)
+- new: plate carrée projection (use $_BO['mapimg'][xx]['proj'] = 'plate'; )
+- fixed: major php-error when updating month statistics 
+- other bugfixes
+
+Version 0.7a (2011-08-28)
+-------------------------
+- fixed installation
+- tuned data purging
+
+Version 0.7 (2011-08-27)
+------------------------
+- new: complete FRENCH translation (by flc85)
+- new: own copyright info (footer, maps, graphs)
+- new: individual time range in dyn map
+- new: flags for language change
+- new: display cities from cities.txt in maps
+- new: display stations in maps
+- new: TTF fonts in maps, also with borders
+- new: more marker styles for station, strikes, cities in maps
+- new: show participated stations for a specific strike in map
+- new: show top stations per tile in dynamic map
+- new: email and more text output on errors during import
+- new: email when station sends no signals
+- new: show new stations in network statistics
+- new: alt-tag in "img"
+- new: maps for western/central europe (germany+france), france and new europe map with nicer colors
+- new: smooth colors for maps
+- new: gif animations for maps (currently only visible when using blitzortung.php?animation=0); not useful for bigger maps (high load)!
+- new: extended traffic and database statistics (when logged-in)
+- new: status files - insert some information (strike count etc...) in your HTML files
+- new: mini station map
+- new: time range in animations
+- new: added windrose for bearing ratios - thanks to Guido for the idea
+- other visual improvements for maps
+- cleanup in default_settings.inc.php and templates.inc.php
+- a lot of bugfixes
+
+Version 0.6a (2011-08-10)
+------------------------
+- new: strike rates for region
+- new: station linking with auth id
+- fix: performance issue in statistics
+
+Version 0.6 (2011-08-05)
+------------------------
+- new: regions (use i.e. &mark=germany on map image to see the area)
+- new: spectrum of raw signals
+- new: a lot of advanced statistics
+- avoid url retrieving with 'file_get_contents' (thx to a2700franz) 
+- headers
+- palette images
+
+Version 0.5.3 (2011-07-13)
+---------------------------
+- new: added default graph times (BO_GRAPH_STAT_HOURS_BACK, BO_GRAPH_STAT_HOURS_BACK_STATIONS)
+- new: search strike by date/time-range for users with permission
+- fix: wrong time on "station statistics" displayed when station is offline
+- fix: update-code improved
+- fixed a some other small bugs
+
+Version 0.5.2 (2011-07-06)
+---------------------------
+IMPORTANT: You have to update the database (log in), otherwise strike import won't work anymore
+- improved: strike search (faster, unlimitied for users with permission)
+- improved: behaviour on active station count changed ("available stations" added, offline = no signals)
+- fix: dynamic map not working on very fast internet connections (race condition)
+- added wetterinfo overlay
+
+Version 0.5.1c (2011-06-27)
+---------------------------
+- fixes
+- dark map of bavaria
+
+Version 0.5.1b (2011-06-24)
+---------------------------
+- fix: cookie issue on dynamic map (map not displayed on second visit)
+
+Version 0.5.1a (2011-06-24)
+---------------------------
+- fix: Javascript error when logged in as admin (More button not working)
+- fix: login with userid 1 was possible with different user/password from database userid 1
+- improvement: loading map through google callback method
+- improvement: show user levels in user table
+
+Version 0.5.1 (2011-06-23)
+--------------------------
+- new: added some overlay templates (radar, blids, euclid - for private internal usage only!)
+- new: antenna bearing on ratio map
+- new: show mean GPS deviation
+- new: maximum strike per tile setting
+- added timeout in track detection to prevent php-failure
+
+Version 0.5 (2011-06-19)
+--------------------------
+- new: custom overlays for google map (not perfect: it lies over the strike overlay)
+- new: border overlays for static maps, to see the borders even if there's much lightning
+- new: strike counter in dynamic map
+- new: auto login with cookie
+- new: caching now with subdirectories (disable with BO_CACHE_SUBDIRS --> false)
+- new: mini europe map
+- new: strike tracks (very experimental)
+- small enhancements and fixes
+
+Version 0.4.8d (2011-06-12)
+---------------------------
+- new: map of Bavaria included
+- new: internal graph average strike distance by time (url: blitzortung.php?graph_statistics=distance)
+- new: error message when cache dir is not writeable
+- fix: installation
+- fix: no error when database port defined as empty string or zero
+- other minor fixes
+
+Version 0.4.8a (2011-06-08)
+---------------------------
+- fix: corrected density display and values on density maps 
+- other minor improvments
+- README revised
+- MyBo site is now www.myblitzortung.de
+
+Version 0.4.8 (2011-06-06)
+--------------------------
+- improved: europe map now shows north of europe (for our Finnish participants) and some color changes
+- changed density area for the new map, so you should clear the density table (you will be asked on update)
+
+Version 0.4.7 (2011-06-06)
+--------------------------
+- removed BO_UTF8 and BO_FILE from the example config.php 
+- new: logged in users with user level "setting" can see GPS info even it is disabled with BO_SHOW_GPS_INFO = false
+- new: circles around MyBo stations
+- new: added BO_DB_PORT to change port of MySQL
+- new: changing language now affects text in strike maps too
+- new: display station position and name in image strike map
+- fix: density calculation was wrong! please CLEAN the density table so that densities can be recalculated
+- improved: density map with legend (may be incorrect)
+
+Version 0.4.6a (2011-06-02)
+--------------------------
+- fix: month selection in statistics -> strikes works now
+
+Version 0.4.6 (2011-06-02)
+--------------------------
+- new: show all strikes in signals table (login!)
+- new: stations with signals in stations graph
+- new: now saving longtime signals per day and month in database (for later usage)
+- fix: actual month now selected in statistics -> strikes
+- fix: display translated month name in statistics -> strikes graphs
+- fix: densities not collected on first day of month
+
+Version 0.4.5 (2011-05-31)
+--------------------------
+- fix: Picture footer UTF8
+- added new germany template in real mercator projection (without picture)
+
+Version 0.4.4a (2011-05-31)
+---------------------------
+- fix: temporarily removed NRW, because it's not mercator
+- fix: english locale
+- added footer to germany map
+
+Version 0.4.4 (2011-05-30)
+--------------------------
+- added two Germany NRW templates (thanks to Royi)
+- fixed: some corrections in english locale
+- fixed: removed two short php tags in archive (damn copy&paste ;-) )
+
+Version 0.4.3 (2011-05-30)
+--------------------------
+- you can add additional E-Mail headers for strike alerts with BO_EMAIL_HEADERS
+
+Version 0.4.2 (2011-05-30)
+--------------------------
+- english language support added
+- changing language in footer possible
+- fix: e-mail adresses with subdomains not accepted in alerts
+
+Version 0.4.1 (2011-05-30)
+--------------------------
+- Add longtime signal ratio
+
+Version 0.4 (2011-05-29)
+------------------------
+- New Release
+- small fixes
+
+Version 0.4-dev2 (2011-05-29)
+-----------------------------
+- added warning if settings.php exists
+- overall maximum zoom level
+
+Version 0.4-dev1 (2011-05-28)
+-----------------------------
+- corrected Germany map
+- some more README entries
+
+Version 0.4-dev (2011-05-28)
+----------------------------
+- UNTESTET DEVELOPMENT VERSION!
+- strike density maps
+- enabling/disabling archive/densities
+- etc.
+
+
+Version 0.3.1 (2011-05-27)
+--------------------------
+- style changes (again)
+- no more config.php.example (Sorry, look default_settings.inc.php)
+- prepare for strike density maps (disabled by default can cause very high load!!!)
+- new: show stations on map
+- fixed: DEFAULT_ZOOM... constants changed their names and working now
+
+
+Version 0.3 (2011-05-25)
+------------------------
+- new: show strike count for month/year
+- new: archive maps and animations
+- new: show no. of participants in archive -> strike search
+- new: templates for maps
+- fix: corrected graphs with "hours" bigger than 24
+- added Database index for statistics
+- style improved
+
+
+Version 0.2.4b (2011-05-23)
+---------------------------
+- fix: changes for MySQL strict-mode (thanks to Franz)
+- fix: locale
+
+
+Version 0.2.4a (2011-05-23)
+---------------------------
+- fix: MyBo stations auto update should work now
+
+
+Version 0.2.4 (2011-05-22)
+--------------------------
+- new: no more settings.php! Use config.php for individual settings! (IMPORTANT !!!)
+- new: style.css changed to include in own website
+- new: define own.css for individual style in standalone version
+- new: Auto update of MyBlitzortung station list
+- new: link to clear file cache links
+- fixed: colors in statistics graphs
+- minor changes and improvements
+
+
+Version 0.2.3 (2011-05-20)
+--------------------------
+- improved UTF8 support
+- Auto link to other MyBlitzortung stations
+- calling update from command line now possible
+
+
+Version 0.2.2b (2011-05-20)
+---------------------------
+(no new features, bugfix release)
+- debug output when importing strikes
+- moved sending image headers
+- adding version information
+- cleanup
+
+
+Version 0.2.2a (2011-05-19)
+---------------------------
+- fix for mysql_num_rows error
+
+
+Version 0.2.2 (2011-05-19)
+--------------------------
+- added important database index -> PLEASE UPDATE!
+- alert performance improvements
+- show bearing in alerts
+- added vars to config alert times
+
+
+Version 0.2.1a (2011-05-19)
+---------------------------
+- fix for distance calc for alerts
+- purged locale en.php
+
+
+Version 0.2.1 (2011-05-19)
+--------------------------
+- added this Changelog ;-)
+- added manual update link for admin
+- added alert log
+- added distance in alerts
+- manual antenna calibratin
+- password changeing
+- longtime statistics graphs
+- error message if jpgraph.php is not present
+- added BO_STATION_STAT_DISABLE to disable statistics of other stations
+- filled README
+
+
+Version 0.2.0 (2011-05-18)
+--------------------------
+- Strike alerts (SMS, E-Mail, URL)
+  New constants added: BO_ALERTS, BO_SMS_GATEWAY_URL
+- New user levels
+- import improvements
+- main map has now own width/height (you have to use the '!important' tag to change size!)
+
+
+Version 0.1.2 (2011-05-17)
+--------------------------
+- caching fixed
+- deviation display setting 
+- added example to display data from 1 to 10 days in map
+- magic_quotes_runtime disabled
+- HTML footer for static maps
+- install script improvements, added style
+- mysql (without "i") support in install script (thanks to ke2705)
+- avoiding too much strike duplicates
+- bugfixes
+
+
+Version 0.1 (2011-05-15)
+------------------------
+- initial release
